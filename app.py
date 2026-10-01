@@ -1,39 +1,37 @@
 import streamlit as st
 import pandas as pd
+import openpyxl
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+import io
 
-st.set_page_config(page_title="BESS Data Diagnostic", layout="wide")
+st.set_page_config(page_title="BESS Sizing Tool", layout="wide", initial_sidebar_state="expanded")
 
-st.title("🔍 BESS Data Table Diagnostic Tool")
+# Title and description
+st.title("🔋 Battery Energy Storage System (BESS) Sizing Tool")
+st.markdown("**Interactive Dashboard** - Adjust parameters below and watch calculations update in real-time")
 
-st.sidebar.header("📁 Upload File")
-uploaded_file = st.sidebar.file_uploader("Upload Excel workbook", type=["xlsm", "xlsx"])
+# Sidebar for file upload
+st.sidebar.header("📁 Project File")
+uploaded_file = st.sidebar.file_uploader("Upload Excel workbook (.xlsm)", type=["xlsm", "xlsx"])
 
 if uploaded_file is None:
-    st.info("Upload your Excel file")
+    st.info("👈 Upload your Combined_Tool_V2_4_11_KS_Update.xlsm file to get started")
     st.stop()
 
-sheet_names = ['BVault', 'PCS Data', 'Battery Rack Data', 'Battery Enclosure Data',
-               'Calendar Degradation', 'Cycling Degradation', 'RTE Data', 'Cost Book', 'System Efficiency']
+# Load workbook
+@st.cache_data
+def load_workbook(file):
+    wb = openpyxl.load_workbook(file, data_only=True)
+    return wb
 
-tables = {}
-for sheet in sheet_names:
+@st.cache_data
+def extract_sheet_data(file, sheet_name):
     try:
-        df = pd.read_excel(uploaded_file, sheet_name=sheet)
-        tables[sheet] = df
-    except Exception as e:
-        st.warning(f"Could not load {sheet}")
+        df = pd.read_excel(file, sheet_name=sheet_name, header=None)
+        return df
+    except:
+        return None
 
-selected_table = st.selectbox("Select table:", list(tables.keys()))
-
-if selected_table in tables and not tables[selected_table].empty:
-    df = tables[selected_table]
-    st.subheader(f"Table: {selected_table}")
-    st.info(f"Shape: {df.shape[0]} rows × {df.shape[1]} columns")
-    
-    st.markdown("**Columns:**")
-    st.write(list(df.columns))
-    
-    st.markdown("**First 5 rows:**")
-    st.dataframe(df.head(5), use_container_width=True)
-else:
-    st.error(f"Table '{selected_table}' is empty")
+w
