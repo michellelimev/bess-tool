@@ -42,27 +42,4 @@ def calculate_system(power_mw, energy_mwh, cycles_day, temp_c, pf, efficiency_to
     cost_inverters = required_inverters * inverter_specs['cost_per_unit']
     cost_transformers = required_transformers * 0.08
     cost_other = (cost_batteries + cost_inverters + cost_transformers) * 0.4
-    total_capex = cost_batteries + cost_inverters + cost_transformers + cost_other
-    return {'power_poi': required_power_poi, 'power_inverter': required_power_inv, 'power_racks': required_power_racks,
-            'energy_poi': required_energy_poi, 'energy_racks': required_energy_racks, 'rte_bol': rte_bol * 100,
-            'derate_factor': derate_factor, 'derated_power': derated_power, 'required_racks': required_racks,
-            'required_enclosures': required_enclosures, 'required_inverters': required_inverters,
-            'required_transformers': required_transformers, 'total_capex': total_capex,
-            'cost_per_kw': total_capex / power_mw if power_mw > 0 else 0,
-            'cost_per_kwh': total_capex / energy_mwh if energy_mwh > 0 else 0}
-
-st.sidebar.markdown("---")
-st.sidebar.header("⚙️ PARAMETER ADJUSTMENT")
-
-power_mw = st.sidebar.slider("🔌 Power (MW)", 25, 500, 100, 5)
-energy_mwh = st.sidebar.slider("⚡ Energy (MWh)", 50, 2000, 400, 50)
-cycles_day = st.sidebar.slider("🔄 Cycles/Day", 0.5, 5.0, 1.0, 0.25)
-temp_c = st.sidebar.slider("🌡️ Temp (°C)", 20, 60, 40, 2)
-pf = st.sidebar.slider("⚙️ Power Factor", 0.85, 1.0, 0.95, 0.01)
-efficiency_total = st.sidebar.slider("📊 Efficiency", 0.90, 0.98, 0.9606, 0.0025)
-
-st.sidebar.markdown("---")
-st.sidebar.subheader("🛠️ Equipment")
-
-battery_types = {
-    'REPT 314Ah 0.25C': {'energy_per_rack':
+    total_capex = cost_batteries + cost_inverters + cost_transformers +
